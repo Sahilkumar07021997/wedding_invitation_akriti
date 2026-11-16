@@ -27,7 +27,7 @@
     .cover-art { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; pointer-events:none; }
     .cover-art-bottom { display:none; }
     .cover-portrait { position:absolute; left:31.5%; bottom:5.8%; width:37%; aspect-ratio:5 / 3; background:var(--festive-art) left bottom / 200% auto no-repeat; mix-blend-mode:multiply; mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent); }
-    .cover-ganesh { position:absolute; top:17%; left:50%; width:54px; height:62px; transform:translateX(-50%); }
+	.cover-ganesh { position:absolute; top:17%; left:50%; width:54px; height:62px; object-fit:contain; transform:translateX(-50%); }
     .cover-copy { position:absolute; inset:26.5% 32% auto; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; }
     .eyebrow { color:#785728; font-size:12px; font-weight:bold; text-transform:uppercase; line-height:1.5; }
     .cover-copy .eyebrow { font-size:11px; }
@@ -90,7 +90,7 @@
     .event { background:#fffdf6; border:1px solid #b8944e; outline:1px solid #e2cf9c; outline-offset:-6px; padding:9px 9px 28px; }
     .event::before { content:''; display:block; aspect-ratio:3 / 2; margin:0 0 20px; background-image:var(--ceremony-art); background-size:200% auto; background-repeat:no-repeat; }
     .event:nth-child(1)::before { background-position:left top; }
-    .event:nth-child(2)::before { background-image:var(--mandap-art); background-size:100% auto; background-position:center; }
+	.event:nth-child(2)::before { background-image:url('dhaam.jpg'); background-size:cover; background-position:center 75%; }
     .event:nth-child(3)::before { background-position:right top; }
     .event:nth-child(4)::before { aspect-ratio:5 / 3; background-image:var(--festive-art); background-position:left bottom; }
     .event:nth-child(5)::before { background-position:right bottom; }
@@ -103,7 +103,10 @@
     .calendar-note { max-width:700px; margin:26px auto 0; font-size:15px; color:#6d5a48; }
     .venue { background:#eef2e6; border-block:1px solid #d0b980; }
     .venue .button-link { margin-top:22px; }
-    .footer { padding:50px 24px 56px; text-align:center; background:#57283a; border-top:3px double #d8ba7b; color:#f8edde; }
+	.footer { overflow:hidden; padding:50px 24px 56px; text-align:center; background:#57283a; border-top:3px double #d8ba7b; color:#f8edde; }
+	.footer-portrait { position:relative; width:min(410px,100%); aspect-ratio:1; margin:0 auto 28px; }
+	.footer-portrait::before { content:''; position:absolute; inset:-8px; background:url('couple.jpg') center 60% / cover no-repeat; filter:blur(14px); opacity:.5; mask-image:radial-gradient(ellipse closest-side at center,#000 45%,transparent 100%); pointer-events:none; }
+	.footer-portrait img { position:relative; display:block; width:100%; height:100%; object-fit:cover; object-position:center 60%; mask-image:radial-gradient(ellipse closest-side at center,#000 60%,#000d 74%,transparent 100%); }
     .footer h2 { color:#f4d685; font-size:32px; font-weight:400; }
     .footer .eyebrow { color:#e9cb95; }
     .phones { display:flex; justify-content:center; flex-wrap:wrap; gap:8px 24px; margin:14px 0 20px; }
@@ -213,31 +216,11 @@
       <img class="cover-art cover-art-top" src="Ornate Indian Wedding Mandap Frame-1 (1).png" width="1536" height="1024" alt="" fetchpriority="high">
       <img class="cover-art cover-art-bottom" src="Ornate Indian Wedding Mandap Frame-1 (1).png" width="1536" height="1024" alt="">
       <div class="cover-portrait" role="img" aria-label="Bride and groom beneath a traditional floral wedding canopy"></div>
-      <svg class="cover-ganesh" viewBox="0 0 100 114" role="img" aria-label="Lord Ganesh" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="ganesh-gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e3bd70"/><stop offset=".5" stop-color="#b48035"/><stop offset="1" stop-color="#f2d79a"/></linearGradient></defs>
-        <circle cx="50" cy="47" r="36" fill="#f5e4bc" fill-opacity=".45" stroke="#d3b070" stroke-width=".8"/>
-        <g fill="url(#ganesh-gold)" stroke="#9f6e2e" stroke-width="1.1" stroke-linejoin="round">
-          <path d="M37 35C19 22 10 35 16 53C19 65 29 70 39 60M63 35C81 22 90 35 84 53C81 65 71 70 61 60"/>
-          <ellipse cx="50" cy="77" rx="19" ry="20"/>
-          <path d="M34 73Q19 59 15 72Q11 84 29 89L36 84M66 73Q81 59 85 72Q89 84 71 89L64 84M39 90Q18 83 18 95Q18 104 45 102L50 98L55 102Q82 104 82 95Q82 83 61 90"/>
-          <path d="M36 37Q35 23 50 24Q65 23 64 37L62 51Q59 63 50 64Q41 63 38 51Z"/>
-          <path d="M36 27L39 15L46 19L50 7L54 19L61 15L64 27Z"/>
-        </g>
-        <g fill="none" stroke-linecap="round">
-          <path d="M50 52C44 63 46 79 60 77C72 76 74 64 66 63" stroke="#9f6e2e" stroke-width="9"/>
-          <path d="M50 52C44 63 46 79 60 77C72 76 74 64 66 63" stroke="#dcb569" stroke-width="6"/>
-          <path d="M41 51L39 60M59 51L61 57" stroke="#fff8e8" stroke-width="3"/>
-          <path d="M39 27H61M38 30H62" stroke="#f5deb0" stroke-width="1.5"/>
-          <path d="M50 33V39" stroke="#9d3450" stroke-width="2"/>
-          <path d="M22 49Q20 38 31 40M78 49Q80 38 69 40" stroke="#f3d8a1" stroke-width="2"/>
-          <path d="M29 107H71" stroke="#b48035" stroke-width="1.5"/>
-        </g>
-        <circle cx="44" cy="44" r="1.5" fill="#653827"/><circle cx="56" cy="44" r="1.5" fill="#653827"/>
-      </svg>
+			<img class="cover-ganesh" src="ganesh-cover.png" width="216" height="256" alt="Lord Ganesh" decoding="async">
       <div class="cover-copy">
         <p class="eyebrow">Together with their families</p>
         <h1><span>Akriti</span><span class="amp">&amp;</span><span>Sahil</span></h1>
-        <p class="cover-date">4 &middot; 5 &middot; 6 December 2026</p>
+		<p class="cover-date">5 December 2026</p>
         <button class="open-button" id="open-invitation" type="button" aria-label="Open Invitation" aria-controls="invitation" aria-expanded="false">
           <span class="envelope-scene" aria-hidden="true">
             <span class="envelope-fallback"><span class="envelope-back"></span><span class="letter-paper">A &amp; S</span><span class="envelope-pocket"></span><span class="envelope-flap"></span><span class="envelope-ribbon"></span><span class="ribbon-bow"></span><span class="ribbon-knot"></span></span>
@@ -257,7 +240,7 @@
       <p class="prayer" lang="hi"><strong>श्री गणेश जी महाराज की जय</strong><br>विघ्न हरण मंगल करण श्री गणपति जी महाराज।<br>प्रथम निमंत्रण आपको पूर्ण कीज्यो काज।।</p>
       <p class="eyebrow">With your gracious presence &amp; blessings</p>
       <h1 id="invitation-heading" tabindex="-1">Akriti Dhiman<br>&amp; Sahil Kumar</h1>
-      <p>4 &ndash; 6 December 2026</p>
+	<p>5 December 2026</p>
       <p class="intro-place">Chalwara, Jawali &middot; Himachal Pradesh</p>
       <span class="flourish" aria-hidden="true">&#10087;</span>
       <p class="eyebrow">A new chapter, a lifetime of love</p>
@@ -301,6 +284,7 @@
       <a class="button-link" href="https://www.google.com/maps/search/?api=1&amp;query=4256%2B7R9%20Chalwara%20Khas%2C%20Himachal%20Pradesh" target="_blank" rel="noopener noreferrer">View Wedding Location</a>
     </section>
     <footer class="footer">
+			<figure class="footer-portrait"><img src="couple.jpg" width="736" height="1308" alt="Bride and groom exchanging wedding garlands" loading="lazy" decoding="async"></figure>
       <p class="eyebrow">With warm regards</p><h2>Dhiman Family</h2>
       <p>Your presence &amp; blessings mean the world to us.</p>
       <p class="eyebrow">R.S.V.P. &middot; Dhiman Family</p>
