@@ -112,6 +112,10 @@
     .phones { display:flex; justify-content:center; flex-wrap:wrap; gap:8px 24px; margin:14px 0 20px; }
     .phones a { display:inline-flex; align-items:center; min-height:44px; color:#fff6de; }
     .closing { font-size:16px; color:#dbe2ce; }
+	.music-toggle { position:fixed; top:max(12px,env(safe-area-inset-top)); right:max(12px,env(safe-area-inset-right)); z-index:30; display:grid; place-items:center; width:44px; height:44px; padding:10px; border:1px solid #c9a667; border-radius:50%; background:#fff9edf5; color:var(--wine); box-shadow:0 2px 8px #57283a20; }
+	.music-toggle:hover { background:#fffdf3; }
+	.music-toggle svg { display:block; width:22px; height:22px; }
+	.music-toggle[hidden],.music-toggle[aria-pressed="false"] .music-on,.music-toggle[aria-pressed="true"] .music-off { display:none; }
     .hanging-garland,.intro .hanging-garland { position:absolute; top:52px; left:8%; width:56px; height:162px; background:var(--mandap-art) -640px -49px / 1536px 1024px no-repeat; mix-blend-mode:multiply; clip-path:polygon(29% 0,70% 0,70% 53%,81% 58%,78% 64%,87% 72%,82% 83%,65% 92%,50% 98%,33% 92%,17% 83%,12% 72%,21% 64%,18% 58%,29% 53%); transform-origin:50% 0; animation:garland-sway 6s ease-in-out infinite alternate; pointer-events:none; }
     .hanging-garland.garland-right { left:auto; right:8%; animation-delay:-3s; animation-duration:7.5s; }
 	.diya-field { position:fixed; inset:0; z-index:19; pointer-events:none; }
@@ -202,10 +206,16 @@
       .reveal { opacity:1 !important; transform:none !important; transition:none; }
       .button-link,.opening .envelope-caption,.opening .cover-date,.envelope-fallback { transition:none; }
     }
+		@media print { .music-toggle { display:none !important; } }
 		@media print { .cover,.diya-field,.petal-field { display:none !important; } .js:not(.opened) main { display:block; } main { box-shadow:none; } .event,.family { break-inside:avoid; } .reveal { opacity:1; transform:none; } * { animation:none !important; transition:none !important; } }
   </style>
 </head>
 <body>
+	<audio id="wedding-music" src="wedding-instrumental.mp3" preload="none" loop></audio>
+	<button class="music-toggle" id="music-toggle" type="button" aria-label="Background music" aria-controls="wedding-music" aria-pressed="false" title="Play music" hidden>
+		<svg class="music-on lucide lucide-volume-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.414 7.586A1.414 1.414 0 0 1 5.414 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.414a1.414 1.414 0 0 1 1 .414l3.383 3.383A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6M19.364 5.636a9 9 0 0 1 0 12.728"/></svg>
+		<svg class="music-off lucide lucide-volume-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.414 7.586A1.414 1.414 0 0 1 5.414 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.414a1.414 1.414 0 0 1 1 .414l3.383 3.383A.705.705 0 0 0 11 19.298z"/><path d="m16 9 6 6m0-6-6 6"/></svg>
+	</button>
   <div class="petal-field" aria-hidden="true"></div>
 	<div class="diya-field" aria-hidden="true">
 		<span class="diya diya--left"><span class="diya-bowl"></span><span class="diya-wick"></span><span class="diya-flame"></span></span>
@@ -4139,8 +4149,55 @@ void main() {
       const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
       const petalField = document.querySelector('.petal-field');
       const openButton = document.getElementById('open-invitation');
+			const music = document.getElementById('wedding-music');
+			const musicToggle = document.getElementById('music-toggle');
+			let musicRequested = false;
+			let musicFadeFrame;
       let openingTimeout;
       let envelopeController = null;
+
+			function syncMusicButton() {
+				const playing = !music.paused && !music.error;
+				musicToggle.setAttribute('aria-pressed', String(playing));
+				musicToggle.title = playing ? 'Mute music' : 'Play music';
+			}
+
+			function playMusic() {
+				musicRequested = true;
+				musicToggle.hidden = false;
+				music.volume = 0;
+				try {
+					music.play().catch(syncMusicButton);
+				} catch {
+					syncMusicButton();
+				}
+			}
+
+			music.addEventListener('playing', function () {
+				window.cancelAnimationFrame(musicFadeFrame);
+				const started = performance.now();
+				function fadeIn(now) {
+					if (music.paused) return;
+					const progress = Math.min((now - started) / 1800, 1);
+					music.volume = .42 * progress;
+					if (progress < 1) musicFadeFrame = window.requestAnimationFrame(fadeIn);
+				}
+				musicFadeFrame = window.requestAnimationFrame(fadeIn);
+				syncMusicButton();
+			});
+			music.addEventListener('pause', function () {
+				window.cancelAnimationFrame(musicFadeFrame);
+				syncMusicButton();
+			});
+			music.addEventListener('error', syncMusicButton);
+			musicToggle.addEventListener('click', function () {
+				if (music.paused) {
+					playMusic();
+				} else {
+					musicRequested = false;
+					music.pause();
+				}
+			});
 
       function createEnvelopeScene(THREE) {
         const stage = document.querySelector('.envelope-scene');
@@ -4362,8 +4419,12 @@ void main() {
       function syncVisibility() {
         root.classList.toggle('page-hidden', document.hidden);
         if (envelopeController) envelopeController.sync();
+				if (document.hidden) music.pause();
+				else if (musicRequested) playMusic();
       }
       document.addEventListener('visibilitychange', syncVisibility);
+			window.addEventListener('pagehide', function () { music.pause(); });
+			window.addEventListener('pageshow', syncVisibility);
       syncVisibility();
 
       if ('IntersectionObserver' in window) {
@@ -4400,6 +4461,7 @@ void main() {
       openButton.addEventListener('click', function () {
         if (root.classList.contains('opened') || root.classList.contains('opening')) return;
         openButton.disabled = true;
+				playMusic();
         if (root.classList.contains('motion-paused')) {
           finishOpening();
           return;
