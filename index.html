@@ -10,7 +10,8 @@
   <style>
     :root { --ink:#382c2b; --wine:#7c2038; --gold:#a77b32; --gold-light:#dfc587; --paper:#fffdf3; --green:#214b38; --mandap-art:url('Ornate Indian Wedding Mandap Frame-1 (1).png'); --ceremony-art:url('Vibrant Indian Wedding Ceremony Collage-2 (1).png'); --festive-art:url('Festive Indian Wedding Ceremony Collage-3.png'); }
     * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+	html { scroll-behavior:smooth; scrollbar-width:none; -webkit-text-size-adjust:100%; }
+	html::-webkit-scrollbar { display:none; }
     body { isolation:isolate; margin:0; color:var(--ink); background:#f5e7db; font:18px/1.6 'Palatino Linotype','Book Antiqua',Palatino,serif; letter-spacing:0; }
     body::before { content:''; position:fixed; inset:0; z-index:-1; background:linear-gradient(120deg,#faeee8bb,#f2e3c966),repeating-linear-gradient(45deg,#ab7c3510 0 1px,transparent 1px 8px); pointer-events:none; }
     h1,h2,h3,p { margin:0; }
@@ -110,6 +111,18 @@
     .closing { font-size:16px; color:#dbe2ce; }
     .hanging-garland,.intro .hanging-garland { position:absolute; top:52px; left:8%; width:56px; height:162px; background:var(--mandap-art) -640px -49px / 1536px 1024px no-repeat; mix-blend-mode:multiply; clip-path:polygon(29% 0,70% 0,70% 53%,81% 58%,78% 64%,87% 72%,82% 83%,65% 92%,50% 98%,33% 92%,17% 83%,12% 72%,21% 64%,18% 58%,29% 53%); transform-origin:50% 0; animation:garland-sway 6s ease-in-out infinite alternate; pointer-events:none; }
     .hanging-garland.garland-right { left:auto; right:8%; animation-delay:-3s; animation-duration:7.5s; }
+	.diya-field { position:fixed; inset:0; z-index:19; pointer-events:none; }
+	.diya { position:absolute; bottom:max(10px,env(safe-area-inset-bottom)); width:56px; height:74px; }
+	.diya--left { left:max(12px,env(safe-area-inset-left)); }
+	.diya--right { right:max(12px,env(safe-area-inset-right)); }
+	.diya-bowl { position:absolute; inset:auto 0 7%; height:29%; border:1px solid #99502e; border-radius:12% 12% 48% 48% / 20% 20% 85% 85%; background:linear-gradient(100deg,#713922,#b46b34 18%,#e2a955 48%,#ad5e2d 78%,#6d3426); box-shadow:inset 0 -3px 3px #66322666,0 3px 4px #50332426; }
+	.diya-bowl::before { content:''; position:absolute; top:-13%; left:-2%; width:104%; height:36%; border:1px solid #d5aa5a; border-radius:50%; background:radial-gradient(ellipse,#c88529,#854c28 65%,#efc676 72%,#ba7d35); }
+	.diya-bowl::after { content:''; position:absolute; inset:31% 12% 21%; border-bottom:1px solid #f8d79099; border-radius:0 0 50% 50%; }
+	.diya-wick { position:absolute; bottom:33%; left:48%; width:5%; min-width:2px; height:12%; border-radius:50%; background:#493326; transform:rotate(12deg); }
+	.diya-flame { position:absolute; bottom:42%; left:38%; width:24%; height:41%; border-radius:52% 48% 42% 58% / 76% 72% 28% 24%; background:linear-gradient(#fff3b0 5%,#ffd15a 40%,#f8a12b 78%,#d96a25); box-shadow:0 0 9px #f6b84488; transform-origin:50% 100%; animation:diya-flicker 1.65s ease-in-out infinite; }
+	.diya-flame::before { content:''; position:absolute; bottom:6%; left:29%; width:44%; height:66%; border-radius:50% 50% 42% 58% / 80% 80% 20% 20%; background:linear-gradient(#fffef5,#ffec86); }
+	.diya-flame::after { content:''; position:absolute; bottom:0; left:29%; width:44%; height:14%; border-radius:50%; background:#738bca99; }
+	.diya--right .diya-flame { animation-duration:1.9s; animation-delay:-.85s; }
     .petal-field { position:fixed; inset:0; z-index:20; overflow:hidden; pointer-events:none; contain:strict; }
     .petal { position:absolute; top:-40px; left:var(--left); width:var(--size); height:var(--size); animation:petal-fall var(--duration) var(--delay) linear infinite; }
     .petal::before { content:''; display:block; width:100%; height:100%; border-radius:85% 15% 75% 25%; background:linear-gradient(135deg,#fff 10%,#fffef7 45%,#e1d3cf 100%); box-shadow:inset 1px 1px 2px #fff,0 2px 4px #784d504d; animation:petal-turn var(--turn-duration) var(--delay) ease-in-out infinite alternate; }
@@ -125,10 +138,12 @@
     .button-link { transition:background-color .25s,box-shadow .25s; }
     .motion-paused .petal-field { display:none; }
     .motion-paused .petal,.motion-paused .petal::before,.motion-paused .hanging-garland,.page-hidden .petal,.page-hidden .petal::before,.page-hidden .hanging-garland { animation-play-state:paused; }
+	.motion-paused .diya-flame,.page-hidden .diya-flame { animation-play-state:paused; }
     .motion-paused .reveal { opacity:1; transform:none; transition:none; }
     .motion-paused main { animation:none; }
     .motion-paused .envelope-scene * { animation:none; }
     .motion-paused .envelope-caption,.motion-paused .cover-date { transition:none; }
+	@keyframes diya-flicker { 0%,100% { transform:rotate(-3deg) scale(.96,1); opacity:.94; } 28% { transform:rotate(3deg) scale(.92,1.05); opacity:1; } 56% { transform:rotate(-2deg) scale(1.02,.95); opacity:.92; } 78% { transform:rotate(4deg) scale(.96,1.03); opacity:1; } }
     @keyframes garland-sway { from { transform:rotate(-2deg); } to { transform:rotate(2deg); } }
     @keyframes petal-fall { 0% { transform:translate3d(0,0,0); opacity:0; } 8% { opacity:.9; } 90% { opacity:.8; } 100% { transform:translate3d(var(--drift),calc(100vh + 80px),0); opacity:0; } }
     @keyframes petal-turn { from { transform:translateX(-12px) rotate(var(--rotation)) rotateY(0deg); } to { transform:translateX(12px) rotate(calc(var(--rotation) + 100deg)) rotateY(65deg); } }
@@ -137,6 +152,10 @@
     @keyframes letter-rise { to { transform:translateY(-48px); } }
     @keyframes invitation-enter { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
     @media (max-width:1200px) {
+			main { width:calc(100% - 24px); }
+			.diya { width:32px; height:46px; }
+			.diya--left { left:max(2px,env(safe-area-inset-left)); }
+			.diya--right { right:max(2px,env(safe-area-inset-right)); }
       .cover { padding:16px 12px; }
       .cover-card { width:min(100%,520px); height:min(850px,calc(100svh - 32px)); min-height:800px; aspect-ratio:auto; }
       .cover-card::before { content:''; position:absolute; inset:8px 5%; border-inline:5px double #d7a535; pointer-events:none; }
@@ -176,15 +195,19 @@
     @media (prefers-reduced-motion:reduce) {
       html { scroll-behavior:auto; }
       .petal-field { display:none; }
-      .hanging-garland,.intro .hanging-garland,.opened main,.opening .envelope-scene * { animation:none; }
+			.diya-flame,.hanging-garland,.intro .hanging-garland,.opened main,.opening .envelope-scene * { animation:none; }
       .reveal { opacity:1 !important; transform:none !important; transition:none; }
       .button-link,.opening .envelope-caption,.opening .cover-date,.envelope-fallback { transition:none; }
     }
-    @media print { .cover,.petal-field { display:none !important; } .js:not(.opened) main { display:block; } main { box-shadow:none; } .event,.family { break-inside:avoid; } .reveal { opacity:1; transform:none; } * { animation:none !important; transition:none !important; } }
+		@media print { .cover,.diya-field,.petal-field { display:none !important; } .js:not(.opened) main { display:block; } main { box-shadow:none; } .event,.family { break-inside:avoid; } .reveal { opacity:1; transform:none; } * { animation:none !important; transition:none !important; } }
   </style>
 </head>
 <body>
   <div class="petal-field" aria-hidden="true"></div>
+	<div class="diya-field" aria-hidden="true">
+		<span class="diya diya--left"><span class="diya-bowl"></span><span class="diya-wick"></span><span class="diya-flame"></span></span>
+		<span class="diya diya--right"><span class="diya-bowl"></span><span class="diya-wick"></span><span class="diya-flame"></span></span>
+	</div>
   <section class="cover" aria-label="Wedding invitation cover">
     <div class="cover-card">
       <img class="cover-art cover-art-top" src="Ornate Indian Wedding Mandap Frame-1 (1).png" width="1536" height="1024" alt="" fetchpriority="high">
