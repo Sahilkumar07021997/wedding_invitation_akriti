@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Reminder</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #fff8f0 0%, #ffe2e2 48%, #ffd0d0 100%);
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+    }
+    .card {
+      position: relative;
+      z-index: 2;
+      width: min(92vw, 760px);
+      padding: clamp(28px, 6vw, 58px) 24px;
+      border: 3px solid #ef4444;
+      border-radius: 28px;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 18px 55px rgba(153, 27, 27, .18);
+    }
+    .cry {
+      font-size: clamp(110px, 23vw, 190px);
+      line-height: 1.05;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 8px 5px rgba(0,0,0,.12));
+      animation: wobble 2.2s ease-in-out infinite;
+    }
+    h1 {
+      margin: 0 0 18px;
+      color: #c40018;
+      font-size: clamp(32px, 7vw, 64px);
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: .025em;
+      text-shadow: 1px 2px 0 #ffd1d1;
+    }
+    p {
+      margin: 0 auto;
+      max-width: 620px;
+      color: #a20e20;
+      font-size: clamp(19px, 3.5vw, 27px);
+      line-height: 1.45;
+      font-weight: 800;
+    }
+    .small {
+      margin-top: 22px;
+      font-size: clamp(15px, 2.6vw, 19px);
+      color: #7f1d1d;
+      font-weight: 700;
+    }
+    .emoji {
+      position: fixed;
+      top: -12vh;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+      animation: fall linear forwards;
+      opacity: .95;
+    }
+    @keyframes fall {
+      to { transform: translate3d(var(--drift), 115vh, 0) rotate(var(--spin)); }
+    }
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-4deg) translateY(0); }
+      50% { transform: rotate(4deg) translateY(-9px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="cry" role="img" aria-label="Crying face">😭</div>
+    <h1>PAYMENT NOT DONE</h1>
+    <p>Please reach out to Sahil and complete your payment ASAP.</p>
+    <div class="small">🥺🙏 Don't let the tears keep falling! 💸</div>
+  </main>
+
+  <script>
+    const emojis = ["😭", "💸", "🥺", "🤑", "💰", "🙏", "😂", "💳", "🚨"];
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function makeEmoji() {
+      if (reducedMotion) return;
+      const item = document.createElement("span");
+      item.className = "emoji";
+      item.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      item.style.left = Math.random() * 100 + "vw";
+      item.style.fontSize = (22 + Math.random() * 30) + "px";
+      item.style.setProperty("--drift", (Math.random() * 180 - 90) + "px");
+      item.style.setProperty("--spin", (Math.random() * 540 - 270) + "deg");
+      item.style.animationDuration = (4 + Math.random() * 5) + "s";
+      document.body.appendChild(item);
+      item.addEventListener("animationend", () => item.remove());
+    }
+
+    for (let i = 0; i < 24; i++) {
+      setTimeout(makeEmoji, i * 140);
+    }
+    setInterval(makeEmoji, 260);
+  </script>
+</body>
+</html>
